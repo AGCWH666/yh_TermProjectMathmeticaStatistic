@@ -9,4 +9,4 @@
 |
 |
 |
-画图
+验证正态分布scipy.stats.normaltest
