@@ -5,7 +5,7 @@ Created on Tue Dec 26 12:02:55 2023
 @author: 12145
 """
 
-
+from sklearn.linear_model import LinearRegression
 import pandas as pd
 import scipy.stats
 import matplotlib.pyplot as plt
@@ -90,12 +90,23 @@ def Plots(list):
 #读取数据，distribute_list是记录了单日所有股票变化率的列表
 filename='D:\\yh_TermProjectMathmeticaStatistic\\data\\rate_list_2099.csv'
 distribute_list = []
+amount_list = []
 with open(filename) as csvfile:
     csv_reader = csv.reader(csvfile)  # 使用csv.reader读取csvfile中的文件
     header = next(csv_reader)        # 读取第一行每一列的标题
     for row in csv_reader:            # 将csv 文件中的数据保存到data中
         distribute_list.append(float(row[2]))           # 选择某一列加入到data数组中
+        amount_list.append(float(row[3]))
 log_distribute = np.log(distribute_list)
+
+
+#线性回归：总量和变化率
+distribute_list_abs = np.absolute(distribute_list)
+amount_list = np.array(amount_list).reshape((-1, 1))
+model = LinearRegression().fit(amount_list, distribute_list_abs)
+pred_rate = model.predict(amount_list)
+pred_rate = pd.DataFrame(pred_rate, columns=['pred_rate'])
+#pred_rate.to_csv("D:\\yh_TermProjectMathmeticaStatistic\\data\\pred_rate_2099.csv", index=False)
 
 
 #画图
@@ -128,3 +139,6 @@ ModifiyedVar = np.var(log_distribute, ddof = 1)
 #区间估计
 confidence_interval_u(log_distribute)
 confidence_interval_sigma(log_distribute)
+
+
+
